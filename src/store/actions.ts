@@ -1,24 +1,49 @@
-import { Action } from '@ngrx/store';
+import { TodoState } from '../store/state';
 import { Todo } from '../app/todo.model';
+import { Action } from '@ngrx/store';
 
-// action constants
-export const ADD_TODO = '[Todo] Add Todo';
-export const LOAD_TODOS = '[Todo] Load Todos';
-export const REMOVE_TODO = '[Todo] Remove Todo';
+export const GET_TODO = '[Todo] GET_TODO';
+export const GET_TODO_SUCCESS = '[Todo] GET_TODO_SUCCESS';
+export const GET_TODO_ERROR = '[Todo] GET_TODO_ERROR';
 
-// action creators
-export class AddTodo {
-  readonly type = ADD_TODO;
-  constructor(private payload: Todo) {}
-}
-export class LoadTodos {
-  readonly type = LOAD_TODOS;
-  constructor(private payload: Todo) {}
-}
-export class RemoveTodo {
-  readonly type = REMOVE_TODO;
-  constructor(private payload: Todo) {}
+export const GET_TODOS = '[Todo] GET_TODOS';
+export const GET_TODOS_SUCCESS = '[Todo] GET_TODOS_SUCCESS';
+export const GET_TODOS_ERROR = '[Todo] GET_TODOS_ERROR';
+
+export class GetTodos implements Action {
+  readonly type = GET_TODOS;
 }
 
-// action types
-export type TodosAction = AddTodo | RemoveTodo | LoadTodos;
+export class GetTodosSuccess implements Action {
+  readonly type = GET_TODOS_SUCCESS;
+
+  constructor(public payload: TodoState[]) {}
+}
+
+export class GetTodosError implements Action {
+  readonly type = GET_TODOS_ERROR;
+}
+
+export class GetTodo implements Action {
+  readonly type = GET_TODO;
+
+  constructor(payload: string) {}
+}
+
+export class GetTodoSuccess implements Action {
+  readonly type = GET_TODO_SUCCESS;
+
+  constructor(public payload: Todo) {}
+}
+
+export class GetTodoError implements Action {
+  readonly type = GET_TODO_ERROR;
+}
+
+export type All =
+  | GetTodo
+  | GetTodoSuccess
+  | GetTodoError
+  | GetTodos
+  | GetTodosSuccess
+  | GetTodosError;

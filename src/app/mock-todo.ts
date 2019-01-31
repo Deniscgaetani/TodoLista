@@ -1,4 +1,4 @@
-import { Todo } from './todo.model';
+import { Todo } from '../app/todo.model';
 
 export const TODOS: Todo[] = [
   { id: 11, name: 'Mr. Nice' },

@@ -4,7 +4,25 @@ import { TODOS} from '../../mock-todo';
 import { TodoService } from 'src/shared/todo.service';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../../store';
+import {
+  Observable,
+  Subject,
+  asapScheduler,
+  pipe,
+  of,
+  from,
+  interval,
+  merge,
+  fromEvent
+} from 'rxjs';
+import { TodoState, TodoListState } from '../../../store/state';
+import * as TodoAction from '../../../store/actions';
 
+export interface AppState {
+
+  todos: TodoListState;
+
+}
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
@@ -15,10 +33,14 @@ export class TodoComponent implements OnInit {
   todos: Todo[];
   selectedTodo: Todo;
   constructor(private todoService: TodoService,
+              private store: Store<TodoListState>
+
               ) { }
+  todoListState$: Observable<TodoState[]>;
 
   ngOnInit() {
-    this.getTodos();
+    this.todoListState$ = this.store.select(state => state.todos);
+    this.store.dispatch(new TodoAction.GetTodos());
   }
   getTodos(): void {
     console.log('aqui');

@@ -1,46 +1,72 @@
-import * as fromActions from './actions';
-import { Todo } from '../app/todo.model';
+import { initializeTodoState, TodoListState, TodoState } from '../store/state';
+import * as TodoActions from '../store/';
 
-export interface TodoState {
- data: Todo[];
-}
-export const initialState = {
-  data: [],
+export type Action = TodoActions.All;
+
+const defaultTodoStates: TodoState[] = [];
+
+
+const defaultState: TodoListState = {
+    todos: defaultTodoStates,
+    loading: false,
+    pending: 0
 };
 
-export function reducer(
-  state = initialState,
-  action: fromActions.TodosAction
-) {
-  switch (action.type) {
-    case fromActions.LOAD_TODOS: {
-      const todo = action;
-      const data = [...state.data, todo];
-      return {
-        ...state,
-        data,
-      };
-    }
-    case fromActions.ADD_TODO: {
-      const todo = action;
-      const data = [...state.data, todo];
-      return {
-        ...state,
-        data,
-      };
-    }
+export function TodoReducer(state = defaultState, action: Action) {
+    console.log(state, action);
 
-    case fromActions.REMOVE_TODO: {
-      const data = state.data.filter(
-        todo => todo.id !== action
-      );
+    switch (action.type) {
 
-      return {
-        ...state,
-        data,
-      };
+
+      // ...............
+
+
+        case TodoActions.GET_TODOS: {
+
+            return { ...state, loaded: false, loading: true };
+        }
+
+
+        case TodoActions.GET_TODOS_SUCCESS: {
+
+            return {
+                ...state,
+                todos: [
+                    ...action.payload,
+                    defaultTodoStates[0]
+                ],
+                loading: false
+            };
+        }
+
+
+
+        /* case TodoActions.DELETE_TODO: {
+
+            return { ...state, ...state.todos.splice(state.todos.indexOf(action.payload), 1) };
+
+        }
+
+
+        case TodoActions.DELETE_TODO_SUCCESS: {
+
+            return state;
+        }
+
+
+        case TodoActions.DELETE_TODO_ERROR: {
+
+            return {
+                ...state,
+                todos: [
+                    ...state.todos,
+                    action.payload
+                ]
+            };
+        } */
+
+
+      // ...............
     }
-  }
-
-  return state;
 }
+
