@@ -1,18 +1,28 @@
 import * as fromActions from './actions';
+import { Todo } from '../app/todo.model';
 
+export interface TodoState {
+ data: Todo[];
+}
 export const initialState = {
-  loaded: false,
-  loading: false,
-  data: [{ label: 'Eat pizza', complete: false }],
+  data: [],
 };
 
 export function reducer(
   state = initialState,
-  action: { type: string; payload: any }
+  action: fromActions.TodosAction
 ) {
   switch (action.type) {
+    case fromActions.LOAD_TODOS: {
+      const todo = action;
+      const data = [...state.data, todo];
+      return {
+        ...state,
+        data,
+      };
+    }
     case fromActions.ADD_TODO: {
-      const todo = action.payload;
+      const todo = action;
       const data = [...state.data, todo];
       return {
         ...state,
@@ -22,7 +32,7 @@ export function reducer(
 
     case fromActions.REMOVE_TODO: {
       const data = state.data.filter(
-        todo => todo.label !== action.payload.label
+        todo => todo.id !== action
       );
 
       return {
