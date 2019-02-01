@@ -35,7 +35,6 @@ export function reducer(
     }
     case fromActions.CREATE_TODO_SUCCESS: {
       const todo = action.payload;
-      console.log(todo);
       const data = [...state.data, todo];
       return {
         ...state,
@@ -65,25 +64,3 @@ export interface ProductsState {
 export const reducers: ActionReducerMap<ProductsState> = {
   todos: reducer
 };
-export const getProductsState = createFeatureSelector<ProductsState>('todos');
-
-// pizzas state
-export const getTodoState = createSelector(
-  getProductsState,
-  (state: ProductsState) => state.todos
-);
-
-export const getAllTodos = createSelector(
-  getTodoState,
-  getTodos
-);
-
-export const getAllTodosLoaded = createSelector(
-  getTodoState,
-  getTodosLoaded
-);
-
-export const getAllTodosLoading = createSelector(
-  getTodoState,
-  getTodosLoading
-);

@@ -38,7 +38,6 @@ export class TodoComponent implements OnInit {
   }
 
   add(name: string): void {
-    console.log('evento:::', name);
     name = name.trim();
     if (!name) {
       return;
