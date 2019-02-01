@@ -1,42 +1,17 @@
 import { Todo } from '../app/todo.model';
 
-export interface TodoState extends Todo {
+export interface TodoState {
+  data: Todo[];
+  loaded: boolean;
   loading: boolean;
-
-  editable: boolean;
-  edited: boolean;
-  editing: boolean;
-
-  selected: boolean;
-  refreshing: boolean;
-
-  create: boolean;
-
-  error: boolean;
 }
 
-export const initializeTodoState = function() {
-  return {
-    loading: false,
-    editable: true,
-    edited: false,
-    editing: false,
-    selected: false,
-    refreshing: false,
-    create: true,
-    error: false
-  };
-};
-
-export interface TodoListState {
-  todos: TodoState[];
-  loading: boolean;
-  pending: number;
-}
-
-export const intializeTodoListState = function() {
-  return {
-    loading: false,
-    pedning: 0
-  };
+export const initialState: TodoState = {
+  data: [
+    { id: 1, name: 'Mr. Redux' },
+    { id: 2, name: 'Mr. Redux 2' },
+    { id: 3, name: 'Mr. Redux 3' }
+  ],
+  loaded: false,
+  loading: false
 };

@@ -2,13 +2,9 @@ import { TodoState } from '../store/state';
 import { Todo } from '../app/todo.model';
 import { Action } from '@ngrx/store';
 
-export const GET_TODO = '[Todo] GET_TODO';
-export const GET_TODO_SUCCESS = '[Todo] GET_TODO_SUCCESS';
-export const GET_TODO_ERROR = '[Todo] GET_TODO_ERROR';
-
-export const GET_TODOS = '[Todo] GET_TODOS';
-export const GET_TODOS_SUCCESS = '[Todo] GET_TODOS_SUCCESS';
-export const GET_TODOS_ERROR = '[Todo] GET_TODOS_ERROR';
+export const GET_TODOS = '[Todo] Get All Todos';
+export const GET_TODOS_SUCCESS = '[Todo] Get All Todos Sucess';
+export const GET_TODOS_FAIL = '[Todo] Get All Todos Fail';
 
 export class GetTodos implements Action {
   readonly type = GET_TODOS;
@@ -16,34 +12,59 @@ export class GetTodos implements Action {
 
 export class GetTodosSuccess implements Action {
   readonly type = GET_TODOS_SUCCESS;
-
-  constructor(public payload: TodoState[]) {}
+  constructor(public payload: Todo[]) {}
 }
 
-export class GetTodosError implements Action {
-  readonly type = GET_TODOS_ERROR;
+export class GetTodosFail implements Action {
+  readonly type = GET_TODOS_FAIL;
+  constructor(public payload: any) {}
 }
+// create pizza
+export const CREATE_TODO = '[Products] Create Todo';
+export const CREATE_TODO_FAIL = '[Products] Create Todo Fail';
+export const CREATE_TODO_SUCCESS = '[Products] Create Todo Success';
 
-export class GetTodo implements Action {
-  readonly type = GET_TODO;
-
-  constructor(payload: string) {}
-}
-
-export class GetTodoSuccess implements Action {
-  readonly type = GET_TODO_SUCCESS;
-
+export class CreateTodo implements Action {
+  readonly type = CREATE_TODO;
   constructor(public payload: Todo) {}
 }
 
-export class GetTodoError implements Action {
-  readonly type = GET_TODO_ERROR;
+export class CreateTodoFail implements Action {
+  readonly type = CREATE_TODO_FAIL;
+  constructor(public payload: any) {}
 }
 
-export type All =
-  | GetTodo
-  | GetTodoSuccess
-  | GetTodoError
+export class CreateTodoSuccess implements Action {
+  readonly type = CREATE_TODO_SUCCESS;
+  constructor(public payload: Todo) {}
+}
+// remove pizza
+export const REMOVE_TODO = '[Products] Remove Todo';
+export const REMOVE_TODO_FAIL = '[Products] Remove Todo Fail';
+export const REMOVE_TODO_SUCCESS = '[Products] Remove Todo Success';
+
+export class RemoveTodo implements Action {
+  readonly type = REMOVE_TODO;
+  constructor(public payload: Todo) {}
+}
+
+export class RemoveTodoFail implements Action {
+  readonly type = REMOVE_TODO_FAIL;
+  constructor(public payload: any) {}
+}
+
+export class RemoveTodoSuccess implements Action {
+  readonly type = REMOVE_TODO_SUCCESS;
+  constructor(public payload: Todo) {}
+}
+
+export type todosAction =
   | GetTodos
   | GetTodosSuccess
-  | GetTodosError;
+  | GetTodosFail
+  | CreateTodo
+  | CreateTodoFail
+  | CreateTodoSuccess
+  | RemoveTodo
+  | RemoveTodoFail
+  | RemoveTodoSuccess;

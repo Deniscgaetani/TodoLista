@@ -1,72 +1,89 @@
-import { initializeTodoState, TodoListState, TodoState } from '../store/state';
-import * as TodoActions from '../store/';
+import * as fromActions from '../store/actions';
+import * as fromState from '../store/state';
+import {
+  ActionReducerMap,
+  createSelector,
+  createFeatureSelector
+} from '@ngrx/store';
 
-export type Action = TodoActions.All;
-
-const defaultTodoStates: TodoState[] = [];
-
-
-const defaultState: TodoListState = {
-    todos: defaultTodoStates,
-    loading: false,
-    pending: 0
-};
-
-export function TodoReducer(state = defaultState, action: Action) {
-    console.log(state, action);
-
-    switch (action.type) {
-
-
-      // ...............
-
-
-        case TodoActions.GET_TODOS: {
-
-            return { ...state, loaded: false, loading: true };
-        }
-
-
-        case TodoActions.GET_TODOS_SUCCESS: {
-
-            return {
-                ...state,
-                todos: [
-                    ...action.payload,
-                    defaultTodoStates[0]
-                ],
-                loading: false
-            };
-        }
-
-
-
-        /* case TodoActions.DELETE_TODO: {
-
-            return { ...state, ...state.todos.splice(state.todos.indexOf(action.payload), 1) };
-
-        }
-
-
-        case TodoActions.DELETE_TODO_SUCCESS: {
-
-            return state;
-        }
-
-
-        case TodoActions.DELETE_TODO_ERROR: {
-
-            return {
-                ...state,
-                todos: [
-                    ...state.todos,
-                    action.payload
-                ]
-            };
-        } */
-
-
-      // ...............
+export function reducer(
+  state = fromState.initialState,
+  action: fromActions.todosAction
+): fromState.TodoState {
+  switch (action.type) {
+    case fromActions.GET_TODOS: {
+      return {
+        ...state,
+        loading: true
+      };
     }
+
+    case fromActions.GET_TODOS_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        loaded: true
+      };
+    }
+
+    case fromActions.GET_TODOS_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        loaded: false
+      };
+    }
+    case fromActions.CREATE_TODO_SUCCESS: {
+      const todo = action.payload;
+      console.log(todo);
+      const data = [...state.data, todo];
+      return {
+        ...state,
+        data
+      };
+    }
+    case fromActions.REMOVE_TODO_SUCCESS: {
+      const data = state.data.filter(todo => todo !== action.payload);
+
+      return {
+        ...state,
+        data
+      };
+    }
+  }
+
+  return state;
 }
 
+export const getTodosLoading = (state: fromState.TodoState) => state.loading;
+export const getTodosLoaded = (state: fromState.TodoState) => state.loaded;
+export const getTodos = (state: fromState.TodoState) => state.data;
+
+export interface ProductsState {
+  todos: fromState.TodoState;
+}
+export const reducers: ActionReducerMap<ProductsState> = {
+  todos: reducer
+};
+export const getProductsState = createFeatureSelector<ProductsState>('todos');
+
+// pizzas state
+export const getTodoState = createSelector(
+  getProductsState,
+  (state: ProductsState) => state.todos
+);
+
+export const getAllTodos = createSelector(
+  getTodoState,
+  getTodos
+);
+
+export const getAllTodosLoaded = createSelector(
+  getTodoState,
+  getTodosLoaded
+);
+
+export const getAllTodosLoading = createSelector(
+  getTodoState,
+  getTodosLoading
+);

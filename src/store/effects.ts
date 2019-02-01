@@ -1,5 +1,5 @@
-import { TodoState } from '../store/state';
 import { Injectable } from '@angular/core';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import {
   Observable,
   Subject,
@@ -11,33 +11,48 @@ import {
   merge,
   fromEvent
 } from 'rxjs';
-import { switchMap, map, filter, scan, catchError } from 'rxjs/operators';
-import { webSocket } from 'rxjs/webSocket';
-
-import { ajax } from 'rxjs/ajax';
-import { TestScheduler } from 'rxjs/testing';
-import { Action } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
-
-import * as TodoActions from '../store/actions';
-
-import { HttpClient } from '@angular/common/http';
 import { TodoService } from 'src/shared/todo.service';
+import * as fromActions from '../store/actions';
+import { map, switchMap, catchError } from 'rxjs/operators';
 
 @Injectable()
-export class TodoEffects {
-  constructor(
-    private http: HttpClient,
-    private todoService: TodoService,
-    private actions$: Actions
-  ) {}
+export class TodosEffects {
+  constructor(private actions$: Actions, private todoService: TodoService) {}
 
   @Effect()
-  loadTodos$ = this.actions$.pipe(
+  getTodos$ = this.actions$.pipe(
+    ofType(fromActions.GET_TODOS),
     switchMap(() => {
       return this.todoService.getTodos().pipe(
-/*         map(todos => new TodoActions.GetTodoSuccess()),
- */      );
+        map(todos => new fromActions.GetTodosSuccess(todos)),
+        catchError(error => of(new fromActions.GetTodosFail(error)))
+      );
+    })
+  );
+
+  @Effect()
+  createTodos$ = this.actions$.pipe(
+    ofType(fromActions.CREATE_TODO),
+    map((action: fromActions.CreateTodo) => action.payload),
+    switchMap(todo => {
+      return this.todoService.addTodo(todo).pipe(
+        map(todos => new fromActions.CreateTodoSuccess(todos)),
+        catchError(error => of(new fromActions.CreateTodoFail(error)))
+      );
+    })
+  );
+
+  @Effect()
+  removeTodos$ = this.actions$.pipe(
+    ofType(fromActions.REMOVE_TODO),
+    map((action: fromActions.RemoveTodo) => action.payload),
+    switchMap(todo => {
+      return this.todoService.deleteTodo(todo).pipe(
+        map(() => new fromActions.RemoveTodoSuccess(todo)),
+        catchError(error => of(new fromActions.RemoveTodoFail(error)))
+      );
     })
   );
 }
+
+export const effects: any[] = [TodosEffects];

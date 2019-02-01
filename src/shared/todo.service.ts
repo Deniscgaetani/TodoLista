@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 import { Observable} from 'rxjs';
 
 import { Todo } from '../app/todo.model';
-// import { MessageService } from './message.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -18,7 +17,6 @@ export class TodoService {
 
   constructor(
     private http: HttpClient,
-    // private messageService: MessageService
     ) { }
 
   /** GET todos from the server */
@@ -39,12 +37,6 @@ export class TodoService {
     const id = typeof payload === 'number' ? payload : payload.id;
     const url = `${this.todosUrl}/${id}`;
     return this.http.delete<Todo>(url, httpOptions)
-    .pipe(catchError((error: any) => Observable.throw(error.json())));
-  }
-
-  /** PUT: update the todo on the server */
-  updateTodo (payload: Todo): Observable<any> {
-    return this.http.put(this.todosUrl, payload, httpOptions)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
   }
 }
